@@ -1,0 +1,16 @@
+{
+	"name": "jan-burianek/ldap-passwd-changer",
+	"description": "Simple set of PHP scripts enabling LDAP users to change their passwords",
+	"license": "GPL-3.0",
+	"authors": [
+		{
+			"name": "Jan Buriánek",
+			"email": "burianek.jen@gmail.com"
+		}
+	],
+	"minimum-stability": "stable",
+	"require": {
+		"nette/nette-minified": "v2.2.3",
+		"twbs/bootstrap": "v3.3.1"
+	}
+}
