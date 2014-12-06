@@ -1,0 +1,24 @@
+{form $component class => 'auth-form', role => 'form'}
+	<h2 class="form-signin-heading">Please authenticate</h2>
+
+	<!-- Jednoduché vykreslení chyb -->
+	<ul class="errors" n:if="$form->hasErrors()">
+		<li n:foreach="$form->errors as $error">{$error}</li>
+	</ul>
+
+
+	{label username class => 'sr-only' /}
+	{input username class => 'form-control', autofocus => TRUE}
+	{label password class => 'sr-only' /}
+	{input password class => 'form-control'}
+
+	<div class="alert alert-info">
+		<p>Hello! This is initial authentication form!</p>
+	</div>
+
+	{input submit}
+{/form}
+
+{block scripts}
+	<script src="{$basePath}js/authForm.js"></script>
+{/block}

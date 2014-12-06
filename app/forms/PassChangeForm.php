@@ -19,28 +19,16 @@
  * Pokud se tak nestalo, najdete ji zde: <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Presenters;
+namespace Nette\Application\UI;
 
-use Nette,
-	App\Model;
+use Nette\Application\UI,
+	Nette\ComponentModel\IContainer;
+use Nette\Templating\FileTemplate;
 
 /**
- * Homepage presenter.
+ * Auth form
+ *
+ * Class AuthForm
+ * @package Nette\Application\UI
  */
-class HomepagePresenter extends BasePresenter
-{
-
-	public function renderDefault() {}
-
-
-	/**
-	 * Vytvoří komponentu bublinek
-	 *
-	 * @return Nette\Application\UI\Bubbles
-	 */
-	public function createComponentPasswdInteractiveForm ()
-	{
-		return new Nette\Application\UI\PasswdInteractiveForm($this->getContext());
-	}
-
-}
+class PassChangeForm extends Form {}

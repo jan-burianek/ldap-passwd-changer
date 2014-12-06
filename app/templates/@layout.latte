@@ -7,26 +7,38 @@
 <html>
 <head>
 	<meta charset="utf-8">
-
-	<title>{ifset #title}{include title|striptags} | {/ifset}Nette Sandbox</title>
-
-	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css">
-	<link rel="stylesheet" media="print" href="{$basePath}/css/print.css">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Simple set of PHP scripts enabling LDAP users to change their passwords">
+	<meta name="author" content="Jan Buriánek">
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
+
+	<title>{ifset #title}{include title|striptags} :: {/ifset}LDAP Passwd Changer</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="{$basePath}/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{$basePath}/css/bootstrap-theme.min.css" rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/screen.css">
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<script src="{$basePath}/js/jquery.js"></script>
+	<script src="{$basePath}/js/main.js"></script>
+
 	{block head}{/block}
 </head>
-
 <body>
-	<script> document.documentElement.className+=' js' </script>
 
 	<div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
 
 	{include content}
 
-	{block scripts}
-	<script src="{$basePath}/js/jquery.js"></script>
-	<script src="{$basePath}/js/netteForms.js"></script>
-	<script src="{$basePath}/js/main.js"></script>
-	{/block}
+	{block scripts}{/block}
 </body>
 </html>
