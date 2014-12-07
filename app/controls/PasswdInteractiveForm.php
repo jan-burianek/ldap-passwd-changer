@@ -35,20 +35,20 @@ use Nette\ComponentModel\IContainer;
 class PasswdInteractiveForm extends Control
 {
 	/**
-	 * @var Nette\DI\Container
+	 * @var Nette\Application\UI\Presenter
 	 */
-	protected $context;
+	protected $presenter;
 
 	/**
-	 * @param Nette\DI\Container $context
+	 * @param Nette\Application\UI\Presenter $presenter
 	 * @param IContainer $parent
 	 * @param null $name
 	 */
-	public function __construct(Nette\DI\Container $context, IContainer $parent = NULL, $name = NULL)
+	public function __construct(Nette\Application\UI\Presenter $presenter, IContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct($parent, $name);
 
-		$this->context = $context;
+		$this->presenter = $presenter;
 	}
 
 	/**
@@ -65,23 +65,13 @@ class PasswdInteractiveForm extends Control
 	 * @return Form
 	 */
 	protected function createComponentAuthForm() {
-		$form = new Nette\Application\UI\AuthForm();
-
-		$form->onSuccess[] = $this->AuthFormSucceeded;
-		$form->onError[] = $this->AuthFormError;
-
-		return $form;
+		return new Nette\Application\UI\AuthForm($this->getPresenter()->getContext());
 	}
 
 	/**
-	 * @param $form
+	 * @return Form
 	 */
-	public function AuthFormSucceeded($form) {}
-
-	/**
-	 *
-	 *
-	 * @param $form
-	 */
-	public function AuthFormError ($form) {}
+	protected function createComponentPassChangeForm() {
+		return new Nette\Application\UI\PassChangeForm($this->presenter->getContext());
+	}
 }

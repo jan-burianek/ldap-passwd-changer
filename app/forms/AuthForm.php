@@ -21,9 +21,11 @@
 
 namespace Nette\Application\UI;
 
-use Nette\Application\UI,
-	Nette\ComponentModel\IContainer;
-use Nette\Templating\FileTemplate;
+use Nette\Application\UI;
+use	Nette\ComponentModel\IContainer;
+use Nette\DI\Container;
+use Nette\Application\Responses\JsonResponse;
+use Nette\Security\AuthenticationException;
 
 /**
  * Auth form
@@ -31,47 +33,94 @@ use Nette\Templating\FileTemplate;
  * Class AuthForm
  * @package Nette\Application\UI
  */
-class AuthForm extends Form
+class AuthForm extends AbstractForm
 {
+
 	/**
+	 * @param Container  $context
 	 * @param IContainer $parent
-	 * @param null $name
+	 * @param null       $name
 	 */
-	function __construct(IContainer $parent = NULL, $name = NULL)
+	function __construct(Container $context, IContainer $parent = NULL, $name = NULL)
 	{
-		parent::__construct($parent, $name);
+		parent::__construct($context, 'authForm.latte', $parent, $name);
 
-		$this->setMethod('post');
-		$this->setMethod('post');
-
-		$this->addText('username', 'LDAP Username')
-#			->setOption('description', '')
-			->setRequired()
+		$this->addText('username', 'Username')
+			->setRequired('Both fields are required')
 			->setAttribute('class', 'form-control')
-			->setAttribute('placeholder', 'LDAP Username');
+			->setAttribute('placeholder', 'Username');
 
 		$this->addPassword('password', 'Password')
-#			->setOption('description', '')
-			->setRequired()
+			->setRequired('Both fields are required')
 			->setAttribute('class', 'form-control')
 			->setAttribute('placeholder', 'Password');
 
-		$this->addSubmit('submit', 'Sign in')
+		$this->addSubmit('submit', 'Authenticate')
 			->setAttribute('class', 'btn btn-lg btn-primary btn-block');
+
+		$this->onSuccess[] = array($this, 'formSucceeded');
+		$this->onValidate[] = array($this, 'formValidation');
+		$this->onError[] = array($this, 'formFailed');
 	}
 
 	/**
-	 * Renders the form
+	 *
+	 *
+	 * @param Form $form
 	 */
-	public function render ()
+	public function formSucceeded (Form $form)
 	{
-		$template = new FileTemplate();
-		$template->setFile(__DIR__ . '/../templates/forms/authForm.latte');
-		$template->onPrepareFilters[] = function ($template) {
-			$template->registerFilter(new \Nette\Latte\Engine);
-		};
-		$template->basePath = \Nette\Environment::getHttpRequest()->getUrl()->getBasePath();
-		$template->component = $this;
-		$template->render();
+		$p = $this->getPresenter();
+
+		if ($p->isAjax())
+		{
+			$p->sendResponse(new JsonResponse(array(
+				'success' => true,
+				'username' => $p->getUser()->getID(),
+				'realname' => $p->getUser()->getIdentity()->getData()['realName']
+			)));
+		}
+	}
+
+	/**
+	 *
+	 *
+	 * @param Form $form
+	 */
+	public function formValidation (Form $form)
+	{
+		$values = $form->getValues();
+
+		//TODO kontrola kolik pokusů za poslední čas
+
+		try {
+			$this->getPresenter()->getUser()->login(
+				$values->username,
+				$values->password
+			);
+		} catch (AuthenticationException $e)
+		{
+			$form->addError($e->getMessage());
+		}
+
+		$this->getPresenter()->getUser()->setExpiration(
+			$this->context->config->session_time
+		);
+	}
+
+	/**
+	 *
+	 *
+	 * @param Form $form
+	 */
+	public function formFailed (Form $form)
+	{
+		if ($this->getPresenter()->isAjax())
+		{
+			$this->getPresenter()->sendResponse(new JsonResponse(array(
+				"success" => false,
+				"errors" => $form->getErrors()
+			)));
+		}
 	}
 }

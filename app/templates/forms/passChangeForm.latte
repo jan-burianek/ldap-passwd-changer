@@ -1,0 +1,21 @@
+{form $form class => 'pass-change-form', role => 'form', style => "display: none"}
+	<h1 class="form-signin-title">OK!</h1>
+	<h3 class="form-signin-heading">Wellcome <span class="real-name label label-default"></span></h3>
+
+	<div class="alert alert-info">
+		<p>Please insert new password for user <span class="user-name label label-default"></span> below:</p>
+	</div>
+
+
+{label password1 class => 'sr-only' /}
+{input password1 class => 'form-control', autofocus => TRUE}
+{label password2 class => 'sr-only' /}
+{input password2 class => 'form-control'}
+
+{input submit}
+
+	<div class="btn btn-lg btn-primary btn-block loader" disabled="disabled">
+		<img class="img-loader" src="{$basePath}images/loader.gif">
+		<img class="img-OK" src="{$basePath}images/OK.png">
+	</div>
+{/form}

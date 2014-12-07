@@ -40,7 +40,7 @@ class HomepagePresenter extends BasePresenter
 	 */
 	public function createComponentPasswdInteractiveForm ()
 	{
-		return new Nette\Application\UI\PasswdInteractiveForm($this->getContext());
+		return new Nette\Application\UI\PasswdInteractiveForm($this);
 	}
 
 }

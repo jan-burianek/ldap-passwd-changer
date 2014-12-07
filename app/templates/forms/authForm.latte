@@ -1,5 +1,5 @@
-{form $component class => 'auth-form', role => 'form'}
-	<h2 class="form-signin-heading">Please authenticate</h2>
+{form $form class => 'auth-form', role => 'form'}
+	<h2 class="form-signin-heading">Please fill in your credentials</h2>
 
 	<!-- Jednoduché vykreslení chyb -->
 	<ul class="errors" n:if="$form->hasErrors()">
@@ -13,12 +13,13 @@
 	{input password class => 'form-control'}
 
 	<div class="alert alert-info">
-		<p>Hello! This is initial authentication form!</p>
+		<p>Simple PHP application enabling LDAP users to change their passwords.</p>
 	</div>
 
 	{input submit}
-{/form}
 
-{block scripts}
-	<script src="{$basePath}js/authForm.js"></script>
-{/block}
+	<div class="btn btn-lg btn-primary btn-block loader" disabled="disabled">
+		<img class="img-loader" src="{$basePath}images/loader.gif">
+		<img class="img-OK" src="{$basePath}images/OK.png">
+	</div>
+{/form}

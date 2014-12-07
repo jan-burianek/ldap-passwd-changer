@@ -1,3 +1,4 @@
+<?php
 /**
  * ldap-passwd-changer
  * Simple set of PHP scripts enabling LDAP users to change their passwords
@@ -18,6 +19,38 @@
  * Pokud se tak nestalo, najdete ji zde: <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function () {
+namespace App\Model;
 
-});
+/**
+ *
+ *
+ * Class Config
+ * @package App\Model
+ */
+class Config {
+
+	/**
+	 * @var
+	 */
+	public $config;
+
+	/**
+	 *
+	 */
+	function __construct()
+	{
+		$this->config = parse_ini_file(__DIR__ . '/../config/config.ini');
+	}
+
+	/**
+	 * Returns specific config rule
+	 *
+	 * @param $name
+	 */
+	function __get($name)
+	{
+		return $this->config[$name];
+	}
+
+
+}
