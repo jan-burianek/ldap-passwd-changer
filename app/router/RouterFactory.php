@@ -24,6 +24,7 @@ namespace App;
 use Nette,
 	Nette\Application\Routers\RouteList,
 	Nette\Application\Routers\Route;
+use Nette\DI\Container;
 
 
 /**
@@ -35,12 +36,17 @@ class RouterFactory
 {
 
 	/**
+	 * @param Container $container
+	 *
 	 * @return \Nette\Application\IRouter
 	 */
-	public function createRouter()
+	public function createRouter(Container $container)
 	{
 		$router = new RouteList();
-		$router[] = new Route('', 'Homepage:default');
+
+		$flags = ($container->config->enable_https)? Route::SECURED : 0;
+
+		$router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default', $flags);
 		return $router;
 	}
 

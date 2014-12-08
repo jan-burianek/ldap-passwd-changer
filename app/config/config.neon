@@ -20,9 +20,11 @@ nette:
 services:
 	- App\Model\LDAPUserManager
 	- App\RouterFactory
-	router: @App\RouterFactory::createRouter
+
 	config:
 		class: \App\Model\Config()
+
+	router: @App\RouterFactory::createRouter
 
 	database:
 		class: Nette\Database\Connection
