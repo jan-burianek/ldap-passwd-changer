@@ -28,9 +28,12 @@ use Nette\Security\Identity;
 use Nette\Application\ForbiddenRequestException;
 
 /**
+ * Data manager of LDAP server
  *
+ * Enables authentication and password updates
  *
  * Class LDAPUserManager
+ * @author Jan Buriánek <burianek.jen@gmail.com>
  * @package App\Model
  */
 class LDAPUserManager extends Nette\Object implements Nette\Security\IAuthenticator {
@@ -40,6 +43,9 @@ class LDAPUserManager extends Nette\Object implements Nette\Security\IAuthentica
 	 */
 	private $connection;
 
+	/**
+	 * @var Nette\DI\Container
+	 */
 	private $context;
 
 	public function __construct(Container $context)
@@ -63,12 +69,19 @@ class LDAPUserManager extends Nette\Object implements Nette\Security\IAuthentica
 
 		$this->establishConnection();
 
-		$searchResult = ldap_search(
+		$id = Nette\Utils\Strings::contains($username, '@')? $c->mail : $c->username;
+
+		$searchResult = @ldap_search(
 			$this->connection,
 			$c->dn,
-			'('.$c->username.'='.$username.')',
+			'(' . $id . '=' . $username . ')',
 			array($c->real_name, $c->mail)
 		);
+
+		if ($searchResult == false)
+		{
+			throw new AuthenticationException('There is a problem with your LDAP connection. Please check the config.ini file.');
+		}
 
 		$records = ldap_get_entries($this->connection, $searchResult);
 
@@ -97,10 +110,12 @@ class LDAPUserManager extends Nette\Object implements Nette\Security\IAuthentica
 		$this->establishConnection();
 		$c = $this->context->config;
 
+		$id = Nette\Utils\Strings::contains($u, '@')? $c->mail : $c->username;
+
 		$searchResult = ldap_search(
 			$this->connection,
 			$c->dn,
-			'('.$c->username.'='.$u.')',
+			'('.$id.'='.$u.')',
 			array($c->real_name, $c->mail)
 		);
 
@@ -119,7 +134,7 @@ class LDAPUserManager extends Nette\Object implements Nette\Security\IAuthentica
 	}
 
 	/**
-	 *
+	 * Establishes connection to LDAP server
 	 */
 	private function establishConnection ()
 	{

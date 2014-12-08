@@ -21,17 +21,28 @@
 
 namespace App\Presenters;
 
-use Nette,
-	App\Model;
+use Nette;
+use Nette\Application\UI\PasswdInteractiveForm;
 
 /**
  * Homepage presenter.
+ * The only one presenter this app has.
+ *
+ * @author Jan Buriánek <burianek.jen@gmail.com>
+ * @package App\Presenters
  */
-class HomepagePresenter extends BasePresenter
+class HomepagePresenter extends Nette\Application\UI\Presenter
 {
 
-	public function renderDefault() {}
+	/**
+	 * Logs access to this app
+	 */
+	function __construct()
+	{
+		\Logger::getLogger('access')->info('Access report');
+	}
 
+	public function renderDefault() {}
 
 	/**
 	 * Vytvoří komponentu bublinek
@@ -40,7 +51,6 @@ class HomepagePresenter extends BasePresenter
 	 */
 	public function createComponentPasswdInteractiveForm ()
 	{
-		return new Nette\Application\UI\PasswdInteractiveForm($this);
+		return new PasswdInteractiveForm($this);
 	}
-
 }

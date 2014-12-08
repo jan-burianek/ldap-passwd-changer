@@ -20,6 +20,7 @@
 
 $(document).ready(function () {
 	$( '.pass-change-form').addClass('transform-hide-immediately');
+	$( '#end-message').addClass('transform-hide-immediately');
 
 	$( '.auth-form' ).ajaxForm ({
 		beforeSend: function() {
@@ -27,7 +28,7 @@ $(document).ready(function () {
 			$('.auth-form').find('input[type="submit"]').hide();
 			$('.auth-form .loader').show();
 		},
-		complete: function(xhr) {console.log(xhr.responseText);
+		complete: function(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
 
@@ -51,8 +52,6 @@ $(document).ready(function () {
 			}
 			else
 			{
-				// There are probably some errors
-
 				$('.auth-form input').prop( 'disabled', false );
 				$('.auth-form .loader').hide();
 				$('.auth-form input[type="submit"]').show();
@@ -72,7 +71,7 @@ $(document).ready(function () {
 			$('.pass-change-form').find('input[type="submit"]').hide();
 			$('.pass-change-form .loader').show();
 		},
-		complete: function(xhr) {alert(xhr.responseText);
+		complete: function(xhr) {
 
 			var data = JSON.parse(xhr.responseText);
 
@@ -88,6 +87,11 @@ $(document).ready(function () {
 
 				setTimeout( function () {
 					$( '.pass-change-form').remove();
+
+					$( '#end-message')
+						.show()
+						.addClass('transform-show');
+
 				}, 1000);
 			}
 			else

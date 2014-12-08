@@ -17,13 +17,13 @@ nette:
 		mapping:
 			*: App\*Module\Presenters\*Presenter
 
-	session:
-		expiration: 14 days
-
-
 services:
 	- App\Model\LDAPUserManager
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
 	config:
 		class: \App\Model\Config()
+
+	database:
+		class: Nette\Database\Connection
+		arguments: ['sqlite:%appDir%/../data/security.db']

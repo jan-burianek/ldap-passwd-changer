@@ -31,6 +31,7 @@ use Nette\Application\ForbiddenRequestException;
  * Auth form
  *
  * Class AuthForm
+ * @author Jan Buriánek <burianek.jen@gmail.com>
  * @package Nette\Application\UI
  */
 class PassChangeForm extends AbstractForm
@@ -71,10 +72,12 @@ class PassChangeForm extends AbstractForm
 	{
 		$values = $form->getValues();
 
+		\Logger::getRootLogger()->debug('User ' . $this->getPresenter()->getUser()->getIdentity()->getData()['realName'] . ' tries to change password');
+
 		if (!$this->getPresenter()->getUser()->isLoggedIn())
 		{
 			$form->addError('You have been automatically disconnected after '.
-				$this->context->config->safe_time
+				$this->context->config->session_time
 				.' seconds. This happened due to keeping your user account secure. Please, <a href="'.
 				Environment::getHttpRequest()->getUrl()->getBasePath().
 				'">authenticate</a> yourself again and be faster :-)');
@@ -87,13 +90,15 @@ class PassChangeForm extends AbstractForm
 		if ($password1 !== $password2)
 		{
 			$form->addError('Passwords do not match');
+			\Logger::getRootLogger()->info('User ' . $this->getPresenter()->getUser()->getIdentity()->getData()['realName'] . ': Passwords do not match');
 		}
 
 		$minLength = $this->context->config->min_passwd_length;
 
 		if (strlen($password1) < $minLength)
 		{
-			$form->addError('Password is too short; minimal required length of password is 8 characters');
+			\Logger::getRootLogger()->info('User ' . $this->getPresenter()->getUser()->getIdentity()->getData()['realName'] . ': Password is too short; minimal required length of password is '.$minLength.' characters');
+			$form->addError('Password is too short; minimal required length of password is '.$minLength.' characters');
 		}
 	}
 
@@ -125,6 +130,8 @@ class PassChangeForm extends AbstractForm
 
 			$this->getPresenter()->getUser()->logout();
 
+			\Logger::getRootLogger()->info('Password of user ' . $this->getPresenter()->getUser()->getIdentity()->getData()['realName'] . ' was successfully upadted');
+
 			$this->getPresenter()->sendResponse(new JsonResponse(array(
 				'success' => true,
 				'realname' => $name
@@ -141,6 +148,9 @@ class PassChangeForm extends AbstractForm
 	{
 		if ($this->getPresenter()->isAjax())
 		{
+			\Logger::getRootLogger()->info('User ' . $this->getPresenter()->getUser()->getIdentity()->getData()['realName'] . ' failed to change its password');
+
+			\Logger::getRootLogger()->debug('Sending "failed response" to client');
 			$this->getPresenter()->sendResponse(new JsonResponse(array(
 				"success" => false,
 				"errors" => $form->getErrors()

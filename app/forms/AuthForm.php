@@ -21,6 +21,7 @@
 
 namespace Nette\Application\UI;
 
+use App\Model\Security;
 use Nette\Application\UI;
 use	Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
@@ -31,6 +32,7 @@ use Nette\Security\AuthenticationException;
  * Auth form
  *
  * Class AuthForm
+ * @author Jan Buriánek <burianek.jen@gmail.com>
  * @package Nette\Application\UI
  */
 class AuthForm extends AbstractForm
@@ -74,6 +76,8 @@ class AuthForm extends AbstractForm
 
 		if ($p->isAjax())
 		{
+			\Logger::getRootLogger()->info('User ' . $form->getValues()->username . ' successfully logged in');
+
 			$p->sendResponse(new JsonResponse(array(
 				'success' => true,
 				'username' => $p->getUser()->getID(),
@@ -90,22 +94,38 @@ class AuthForm extends AbstractForm
 	public function formValidation (Form $form)
 	{
 		$values = $form->getValues();
+		\Logger::getRootLogger()->debug('User ' . $values->username . ' tries to log in');
 
-		//TODO kontrola kolik pokusů za poslední čas
+		$security = new Security($this->context);
+
+		if ($security->isBanned($values->username))
+		{
+			$form->addError('User ' . $values->username . ' exceeded allowed amount of login attempts. Please wait a minute and try it again.');
+			\Logger::getRootLogger()->info('User ' . $values->username . ' id banned, rejecting');
+			return;
+		}
+
+		$security->log($values->username);
+		$security->checkAmountOfAttempts($values->username);
 
 		try {
 			$this->getPresenter()->getUser()->login(
 				$values->username,
 				$values->password
 			);
+
+			$this->getPresenter()->getUser()->setExpiration(
+				$this->context->config->session_time
+			);
+
+			$security->remove($values->username);
 		} catch (AuthenticationException $e)
 		{
 			$form->addError($e->getMessage());
+			\Logger::getRootLogger()->info('User ' . $values->username . ': ' . $e->getMessage());
 		}
 
-		$this->getPresenter()->getUser()->setExpiration(
-			$this->context->config->session_time
-		);
+
 	}
 
 	/**
@@ -117,6 +137,9 @@ class AuthForm extends AbstractForm
 	{
 		if ($this->getPresenter()->isAjax())
 		{
+			\Logger::getRootLogger()->info('User ' . $form->getValues()->username . ' failed to log in');
+
+			\Logger::getRootLogger()->debug('Sending "failed response" to client');
 			$this->getPresenter()->sendResponse(new JsonResponse(array(
 				"success" => false,
 				"errors" => $form->getErrors()

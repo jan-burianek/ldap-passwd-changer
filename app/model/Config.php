@@ -22,9 +22,10 @@
 namespace App\Model;
 
 /**
- *
+ * Model for obtaining app config
  *
  * Class Config
+ * @author Jan Buriánek <burianek.jen@gmail.com>
  * @package App\Model
  */
 class Config {
@@ -49,6 +50,7 @@ class Config {
 	 */
 	function __get($name)
 	{
+		\Logger::getRootLogger()->debug('Request for config: ' . $name);
 		return $this->config[$name];
 	}
 

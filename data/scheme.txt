@@ -1,0 +1,10 @@
+CREATE TABLE "access" (
+    "access_id" INTEGER PRIMARY KEY NOT NULL,
+    "uid" TEXT NOT NULL,
+    "last_attempt" INTEGER NOT NULL
+);
+CREATE TABLE "banned" (
+	"banned_id" INTEGER PRIMARY KEY NOT NULL,
+    "uid" TEXT NOT NULL,
+    "from_time" INTEGER NOT NULL
+);

@@ -28,6 +28,13 @@ use Nette\DI\Container;
 use Nette\Environment;
 use Nette\Latte\Engine;
 
+/**
+ * Abstract base for forms.
+ *
+ * Class AbstractForm
+ * @author Jan Buriánek <burianek.jen@gmail.com>
+ * @package Nette\Application\UI
+ */
 abstract class AbstractForm extends Form {
 
 	/**

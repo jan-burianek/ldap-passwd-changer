@@ -28,6 +28,8 @@ use Nette,
 
 /**
  * Router factory.
+ *
+ * @author Jan Buriánek <burianek.jen@gmail.com>
  */
 class RouterFactory
 {
@@ -38,7 +40,7 @@ class RouterFactory
 	public function createRouter()
 	{
 		$router = new RouteList();
-		$router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
+		$router[] = new Route('', 'Homepage:default');
 		return $router;
 	}
 

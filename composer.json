@@ -11,6 +11,7 @@
 	"minimum-stability": "stable",
 	"require": {
 		"nette/nette-minified": "v2.2.3",
-		"twbs/bootstrap": "v3.3.1"
+		"twbs/bootstrap": "v3.3.1",
+		"apache/log4php": "2.3.0"
 	}
 }

@@ -1,12 +1,6 @@
 {form $form class => 'auth-form', role => 'form'}
 	<h2 class="form-signin-heading">Please fill in your credentials</h2>
 
-	<!-- Jednoduché vykreslení chyb -->
-	<ul class="errors" n:if="$form->hasErrors()">
-		<li n:foreach="$form->errors as $error">{$error}</li>
-	</ul>
-
-
 	{label username class => 'sr-only' /}
 	{input username class => 'form-control', autofocus => TRUE}
 	{label password class => 'sr-only' /}

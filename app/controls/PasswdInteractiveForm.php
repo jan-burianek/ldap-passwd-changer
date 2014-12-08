@@ -24,12 +24,14 @@ namespace Nette\Application\UI;
 use Nette,
 	Model;
 use Nette\ComponentModel\IContainer;
+use Nette\Application\UI\Presenter;
 
 /**
  * Interactive form containing
  * both forms with all funkcionality
  *
  * Class PasswdInteractiveForm
+ * @author Jan Buriánek <burianek.jen@gmail.com>
  * @package Nette\Application\UI
  */
 class PasswdInteractiveForm extends Control
@@ -44,7 +46,7 @@ class PasswdInteractiveForm extends Control
 	 * @param IContainer $parent
 	 * @param null $name
 	 */
-	public function __construct(Nette\Application\UI\Presenter $presenter, IContainer $parent = NULL, $name = NULL)
+	public function __construct(Presenter $presenter, IContainer $parent = NULL, $name = NULL)
 	{
 		parent::__construct($parent, $name);
 
@@ -52,7 +54,7 @@ class PasswdInteractiveForm extends Control
 	}
 
 	/**
-	 *
+	 * Renders the component
 	 */
 	public function render ()
 	{
@@ -65,13 +67,15 @@ class PasswdInteractiveForm extends Control
 	 * @return Form
 	 */
 	protected function createComponentAuthForm() {
-		return new Nette\Application\UI\AuthForm($this->getPresenter()->getContext());
+		\Logger::getRootLogger()->debug('Creating Auth Form');
+		return new AuthForm($this->getPresenter()->getContext());
 	}
 
 	/**
 	 * @return Form
 	 */
 	protected function createComponentPassChangeForm() {
-		return new Nette\Application\UI\PassChangeForm($this->presenter->getContext());
+		\Logger::getRootLogger()->debug('Creating Pass Change Form');
+		return new PassChangeForm($this->presenter->getContext());
 	}
 }
